@@ -20,6 +20,7 @@
 		193FDC192191CCA20032801F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		193FDC1A2191CCA20032801F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		193FDC1C2191CCA20032801F /* LookupLeoDict.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LookupLeoDict.entitlements; sourceTree = "<group>"; };
+		193FDC2221923EB50032801F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +37,7 @@
 		193FDC052191CC9F0032801F = {
 			isa = PBXGroup;
 			children = (
+				193FDC2221923EB50032801F /* README.md */,
 				193FDC102191CC9F0032801F /* LookupLeoDict */,
 				193FDC0F2191CC9F0032801F /* Products */,
 			);
