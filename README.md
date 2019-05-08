@@ -12,4 +12,4 @@ Also check the macOS system settings -> Keyboard -> Shortcuts -> Services to cus
 ## Usage
 Default shortcut (Cmd-\\) should work in most macOS application where you can select the text. Alternatively you can use the menu <App>->Services->Lookup at dict.leo.org option. Service will open a new web page in your default web browser. 
 
-dict.leo.org and translate.google.com sites belongs to their owners.
+dict.leo.org, deepL.com and translate.google.com sites belong to their owners.
