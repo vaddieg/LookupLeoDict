@@ -51,19 +51,27 @@ static NSString * const kEngineDefaultsKey = @"SentenceTraslationEngine";
     NSString *lookup = [pboardString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]];
     
     NSString *requestStr = nil;
-    if ([pboardString componentsSeparatedByString:@" "].count > 2) {
+  
+    BOOL germanUsed = [[SimpleDictOpener lleoOptions][srcOpt] isEqualToString:@"deutsch"] || [[SimpleDictOpener lleoOptions][targOpt] isEqualToString:@"deutsch"];
+    BOOL shouldUseLeo = ([pboardString componentsSeparatedByString:@" "].count <= 2) && germanUsed;
+  
+    if (!shouldUseLeo) {
         
         // Looks like a sentence, use google or deepL
         NSString *fmt = @[@"https://www.deepl.com/translator#%@/%@/%@",
                           @"https://translate.google.com/#%@/%@/%@"][engine];
         
-        
+      
         requestStr = [NSString stringWithFormat:fmt, [SimpleDictOpener gtOptions][srcOpt], [SimpleDictOpener gtOptions][targOpt], lookup];
     } else {
         // Use leo (it handles 2 words sometimes)
-        requestStr = [NSString stringWithFormat:@"https://dict.leo.org/%@-%@/%@",[SimpleDictOpener lleoOptions][srcOpt], [SimpleDictOpener lleoOptions][targOpt] ,lookup];
+         // use leo-related url hacks, de should appear as 2nd arg
+        NSString *nonDeLang = [[SimpleDictOpener lleoOptions][srcOpt] isEqualToString:@"deutsch"] ? [SimpleDictOpener lleoOptions][targOpt] : [SimpleDictOpener lleoOptions][srcOpt];
+      
+        requestStr = [NSString stringWithFormat:@"https://dict.leo.org/%@-deutsch/%@",nonDeLang ,lookup];
     }
-    
+  
+    NSLog(@"opening url:%@", requestStr);
     if (![[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:requestStr]]) {
         NSLog(@"Can't open URL %@", requestStr);
     }
@@ -87,7 +95,6 @@ static NSString * const kEngineDefaultsKey = @"SentenceTraslationEngine";
 - (IBAction)didChangeSourceLanguage:(NSPopUpButton *)sender {
     [[NSUserDefaults standardUserDefaults] setInteger:sender.indexOfSelectedItem forKey:kSourceLangDefaultsKey];
 }
-
 
 - (IBAction)didChangeTargetLanguage:(NSPopUpButton *)sender {
     [[NSUserDefaults standardUserDefaults] setInteger:sender.indexOfSelectedItem forKey:kTargetLangDefaultsKey];
