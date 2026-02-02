@@ -171,7 +171,6 @@ static NSString * const kEngineDefaultsKey = @"SentenceTraslationEngine";
         [self showSettingsWindow];
     });
     
-    
 }
 
 
