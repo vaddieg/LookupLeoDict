@@ -43,8 +43,8 @@ static NSString * const kLangDefaultsKey = @"TargetLanguage";
     NSString *lookup = [pboardString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]];
     
     NSString *requestStr = nil;
-    if ([pboardString componentsSeparatedByString:@" "].count > 1) {
-        // Use google
+    if ([pboardString componentsSeparatedByString:@" "].count > 2) {
+        // Looks like a sentence, use google
         requestStr = [NSString stringWithFormat:@"https://translate.google.com/#de/%@/%@", [SimpleDictOpener gtOptions][opt], lookup];
     } else {
         // Use leo
