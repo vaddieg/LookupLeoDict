@@ -8,7 +8,9 @@
 
 #import "AppDelegate.h"
 
-static NSString * const kLangDefaultsKey = @"TargetLanguage";
+static NSString * const kTargetLangDefaultsKey = @"TargetLanguage";
+static NSString * const kSourceLangDefaultsKey = @"SourceLanguage";
+static NSString * const kEngineDefaultsKey = @"SentenceTraslationEngine";
 
 @interface SimpleDictOpener : NSObject
 @end
@@ -16,15 +18,19 @@ static NSString * const kLangDefaultsKey = @"TargetLanguage";
 @implementation SimpleDictOpener
 
 + (NSArray *)optionsList {
-    return @[@"🇬🇧 English", @"🇫🇷 Français" ,@"🇧🇬 Русский", @"🇪🇸 Español", @"🇺🇦 Українська"];
+    return @[@"🇬🇧 English",@"🇩🇪 Deutsch", @"🇫🇷 Français" ,@"🇧🇬 Русский", @"🇪🇸 Español", @"🇺🇦 Українська"];
+}
+
++ (NSArray *)enginesList {
+    return @[@"DeepL", @"Google"];
 }
 
 + (NSArray *)lleoOptions {
-    return @[@"englisch", @"französisch" ,@"russisch", @"spanisch", @"russisch"];
+    return @[@"englisch", @"deutsch", @"französisch" ,@"russisch", @"spanisch", @"russisch"];
 }
 
 + (NSArray *)gtOptions {
-    return @[@"en", @"fr" ,@"ru", @"es", @"uk"];
+    return @[@"en", @"de", @"fr" ,@"ru", @"es", @"uk"];
 }
 
 - (void)lookupWord:(NSPasteboard *)pboard userData:(NSString *)userData error:(NSString **)error {
@@ -38,17 +44,24 @@ static NSString * const kLangDefaultsKey = @"TargetLanguage";
     }
     
     NSString *pboardString = [pboard stringForType:NSPasteboardTypeString];
-    NSInteger opt = [[NSUserDefaults standardUserDefaults] integerForKey:kLangDefaultsKey];
+    NSInteger srcOpt = [[NSUserDefaults standardUserDefaults] integerForKey:kSourceLangDefaultsKey];
+    NSInteger targOpt = [[NSUserDefaults standardUserDefaults] integerForKey:kTargetLangDefaultsKey];
+    NSInteger engine = [[NSUserDefaults standardUserDefaults] integerForKey:kEngineDefaultsKey];
     
     NSString *lookup = [pboardString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]];
     
     NSString *requestStr = nil;
     if ([pboardString componentsSeparatedByString:@" "].count > 2) {
-        // Looks like a sentence, use google
-        requestStr = [NSString stringWithFormat:@"https://translate.google.com/#de/%@/%@", [SimpleDictOpener gtOptions][opt], lookup];
+        
+        // Looks like a sentence, use google or deepL
+        NSString *fmt = @[@"https://www.deepl.com/translator#%@/%@/%@",
+                          @"https://translate.google.com/#%@/%@/%@"][engine];
+        
+        
+        requestStr = [NSString stringWithFormat:fmt, [SimpleDictOpener gtOptions][srcOpt], [SimpleDictOpener gtOptions][targOpt], lookup];
     } else {
-        // Use leo
-        requestStr = [NSString stringWithFormat:@"https://dict.leo.org/%@-deutsch/%@",[SimpleDictOpener lleoOptions][opt] ,lookup];
+        // Use leo (it handles 2 words sometimes)
+        requestStr = [NSString stringWithFormat:@"https://dict.leo.org/%@-%@/%@",[SimpleDictOpener lleoOptions][srcOpt], [SimpleDictOpener lleoOptions][targOpt] ,lookup];
     }
     
     if (![[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:requestStr]]) {
@@ -63,14 +76,25 @@ static NSString * const kLangDefaultsKey = @"TargetLanguage";
 @interface AppDelegate ()
 
 @property (weak) IBOutlet NSWindow *window;
+@property (weak) IBOutlet NSPopUpButton *sourceLangPopup;
 @property (weak) IBOutlet NSPopUpButton *targetLangPopup;
+@property (weak) IBOutlet NSPopUpButton *enginePopup;
 
 @end
 
 @implementation AppDelegate
 
-- (IBAction)didChangeLanguage:(NSPopUpButton *)sender {
-    [[NSUserDefaults standardUserDefaults] setInteger:sender.indexOfSelectedItem forKey:kLangDefaultsKey];
+- (IBAction)didChangeSourceLanguage:(NSPopUpButton *)sender {
+    [[NSUserDefaults standardUserDefaults] setInteger:sender.indexOfSelectedItem forKey:kSourceLangDefaultsKey];
+}
+
+
+- (IBAction)didChangeTargetLanguage:(NSPopUpButton *)sender {
+    [[NSUserDefaults standardUserDefaults] setInteger:sender.indexOfSelectedItem forKey:kTargetLangDefaultsKey];
+}
+
+- (IBAction)didChangeEngine:(NSPopUpButton *)sender {
+    [[NSUserDefaults standardUserDefaults] setInteger:sender.indexOfSelectedItem forKey:kEngineDefaultsKey];
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
@@ -78,23 +102,54 @@ static NSString * const kLangDefaultsKey = @"TargetLanguage";
 }
 
 - (void)validatePreferences {
-    NSInteger selection = [[NSUserDefaults standardUserDefaults] integerForKey:kLangDefaultsKey];
-    if (selection >= [SimpleDictOpener optionsList].count) {
+    NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
+    //translate from DE by default
+    if (![defs objectForKey:kSourceLangDefaultsKey]) {
+        [defs setInteger:1 forKey:kSourceLangDefaultsKey];
+    }
+    
+    
+    NSInteger targSelection = [defs integerForKey:kTargetLangDefaultsKey];
+    if (targSelection >= [SimpleDictOpener optionsList].count) {
         // reset invalid settings
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLangDefaultsKey];
+        [defs removeObjectForKey:kTargetLangDefaultsKey];
+    }
+    
+    NSInteger srcSelection = [defs integerForKey:kSourceLangDefaultsKey];
+    if (srcSelection >= [SimpleDictOpener optionsList].count) {
+        // reset invalid settings
+        [defs removeObjectForKey:kSourceLangDefaultsKey];
     }
 }
 
 - (void)showSettingsWindow {
-    [self.targetLangPopup removeAllItems];
+    NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
     
-    NSInteger selection = [[NSUserDefaults standardUserDefaults] integerForKey:kLangDefaultsKey];
+    [self.sourceLangPopup removeAllItems];
+    NSInteger srcSelection = [defs integerForKey:kSourceLangDefaultsKey];
+    
+    for (NSString *option in [SimpleDictOpener optionsList]) {
+        [self.sourceLangPopup addItemWithTitle:option];
+    }
+    [self.sourceLangPopup selectItemAtIndex:srcSelection];
+    
+    
+    [self.targetLangPopup removeAllItems];
+    NSInteger targSelection = [defs integerForKey:kTargetLangDefaultsKey];
     
     for (NSString *option in [SimpleDictOpener optionsList]) {
         [self.targetLangPopup addItemWithTitle:option];
     }
+    [self.targetLangPopup selectItemAtIndex:targSelection];
     
-    [self.targetLangPopup selectItemAtIndex:selection];
+    [self.enginePopup removeAllItems];
+    NSInteger engSelection = [defs integerForKey:kEngineDefaultsKey];
+    
+    for (NSString *option in [SimpleDictOpener enginesList]) {
+        [self.enginePopup addItemWithTitle:option];
+    }
+    [self.enginePopup selectItemAtIndex:engSelection];
+    
     [self.window makeKeyAndOrderFront:nil];
 }
 
@@ -104,6 +159,7 @@ static NSString * const kLangDefaultsKey = @"TargetLanguage";
     SimpleDictOpener *serviceProvider = [SimpleDictOpener new];
     [NSApp setServicesProvider:serviceProvider];
     
+    // Settings should be shown only w/ standalone launch
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self showSettingsWindow];
     });

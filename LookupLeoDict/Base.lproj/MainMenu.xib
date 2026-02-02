@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -11,9 +12,11 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate">
             <connections>
+                <outlet property="enginePopup" destination="pcI-8l-3XY" id="z6f-l2-UWw"/>
+                <outlet property="sourceLangPopup" destination="EgI-NU-3Nk" id="Cyd-qX-2ds"/>
                 <outlet property="targetLangPopup" destination="0VX-uL-ddh" id="62d-BL-khx"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
@@ -170,14 +173,14 @@
         <window title="Lookup options" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="377" height="99"/>
+            <rect key="contentRect" x="335" y="390" width="377" height="130"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="377" height="99"/>
+                <rect key="frame" x="0.0" y="0.0" width="377" height="130"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="DLM-B5-Qur">
-                        <rect key="frame" x="18" y="76" width="341" height="17"/>
+                        <rect key="frame" x="18" y="109" width="341" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" title="Translate selection:" id="6GO-SP-s8m">
                             <font key="font" usesAppearanceFont="YES"/>
@@ -186,16 +189,16 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="5MK-Dr-QU3">
-                        <rect key="frame" x="40" y="51" width="109" height="17"/>
+                        <rect key="frame" x="30" y="82" width="36" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <textFieldCell key="cell" lineBreakMode="clipping" title="from 🇩🇪 Deutsch" id="sVr-BN-YmK">
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="from " id="sVr-BN-YmK">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="tbB-TH-ckG">
-                        <rect key="frame" x="151" y="51" width="43" height="17"/>
+                        <rect key="frame" x="203" y="82" width="28" height="17"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" title="to" id="877-6v-IAd">
                             <font key="font" metaFont="system"/>
@@ -203,16 +206,8 @@
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button verticalHuggingPriority="750" id="QK0-BG-M7x">
-                        <rect key="frame" x="18" y="18" width="225" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Use Google language autodetect " bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="hJy-ZJ-vO0">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                    </button>
                     <popUpButton verticalHuggingPriority="750" id="0VX-uL-ddh">
-                        <rect key="frame" x="179" y="47" width="133" height="24"/>
+                        <rect key="frame" x="225" y="78" width="133" height="24"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="squareTextured" title="🇺🇦 Ukrainian" bezelStyle="texturedSquare" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" selectedItem="k2h-K5-jxW" id="cAD-cc-NlA">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -226,12 +221,56 @@
                             </menu>
                         </popUpButtonCell>
                         <connections>
-                            <action selector="didChangeLanguage:" target="Voe-Tx-rLC" id="ngZ-vK-wa5"/>
+                            <action selector="didChangeTargetLanguage:" target="Voe-Tx-rLC" id="8NH-xB-pe7"/>
+                        </connections>
+                    </popUpButton>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="WvP-J8-Clc">
+                        <rect key="frame" x="18" y="55" width="341" height="17"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Engine to translate sentences:" id="uzm-QK-mMG">
+                            <font key="font" usesAppearanceFont="YES"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <popUpButton verticalHuggingPriority="750" id="pcI-8l-3XY">
+                        <rect key="frame" x="225" y="24" width="133" height="24"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <popUpButtonCell key="cell" type="squareTextured" title="DeepL" bezelStyle="texturedSquare" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" selectedItem="Xsw-wQ-c9W" id="6Ma-Pb-9n7">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="menu"/>
+                            <menu key="menu" id="JTz-8i-Fri">
+                                <items>
+                                    <menuItem title="DeepL" state="on" id="Xsw-wQ-c9W"/>
+                                    <menuItem title="Google" id="lRV-VC-MMj"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                        <connections>
+                            <action selector="didChangeEngine:" target="Voe-Tx-rLC" id="gjN-Ps-a04"/>
+                        </connections>
+                    </popUpButton>
+                    <popUpButton verticalHuggingPriority="750" id="EgI-NU-3Nk">
+                        <rect key="frame" x="68" y="78" width="119" height="24"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <popUpButtonCell key="cell" type="squareTextured" title="🇬🇧 English" bezelStyle="texturedSquare" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" selectedItem="5Nz-jC-BRH" id="53f-iJ-oNt">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="menu"/>
+                            <menu key="menu" id="DOK-7W-TNf">
+                                <items>
+                                    <menuItem title="🇬🇧 English" state="on" id="5Nz-jC-BRH"/>
+                                    <menuItem title="🇧🇬 Russian" id="sKe-Gr-Rrs"/>
+                                    <menuItem title="🇺🇦 Ukrainian" id="xDP-An-v06"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                        <connections>
+                            <action selector="didChangeSourceLanguage:" target="Voe-Tx-rLC" id="v1R-l7-ulT"/>
                         </connections>
                     </popUpButton>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="112.5" y="274.5"/>
+            <point key="canvasLocation" x="112.5" y="290"/>
         </window>
     </objects>
 </document>
